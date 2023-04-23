@@ -1,6 +1,13 @@
 import speech_recognition as sr
 from pathlib import Path
 import arabic_reshaper
+from log_config import init_logger
+import logging
+
+# initaite logger
+init_logger()
+logger = logging.getLogger('audio-to-text')
+
 
 # get base folder
 base = Path(__file__).parent
