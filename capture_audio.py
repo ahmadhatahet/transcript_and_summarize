@@ -3,6 +3,12 @@ import wave
 import datetime
 import time
 from pathlib import Path
+from log_config import init_logger
+import logging
+
+# initaite logger
+init_logger()
+logger = logging.getLogger('audio-to-text')
 
 # save audio to folder
 now = datetime.datetime.now()
