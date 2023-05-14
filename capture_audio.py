@@ -12,7 +12,7 @@ logger = logging.getLogger('audio-to-text')
 
 # save audio to folder
 now = datetime.datetime.now()
-file_name = now.strftime("%Y-%m-%d_%H-%M.wav")
+file_name = now.strftime("%Y-%m-%d_%H-%M")
 
 base = Path(__file__).parent
 path_audio_files = base / 'audio_files' / file_name
