@@ -2,6 +2,12 @@ import openai
 from pathlib import Path
 from openai.error import RateLimitError
 from time import sleep
+from log_config import init_logger
+import logging
+
+# initaite logger
+init_logger()
+logger = logging.getLogger('audio-to-text')
 
 
 
