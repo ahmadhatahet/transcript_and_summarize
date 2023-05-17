@@ -11,9 +11,9 @@ import os
 init_logger()
 logger = logging.getLogger('summrize')
 
+
 # get base folder
 base = Path(__file__).parent
-path_text_files = base / 'text_files' / '2023-05-17_18-37'
 
 # load env variables
 load_dotenv(base / '.env')
@@ -44,43 +44,46 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
     return response.choices[0].message["content"]
 
 
+def summarize(path_text_files):
 
-# read all texts
-text_corpus = []
-for text_file in path_text_files.iterdir():
+    # read all texts
+    text_corpus = []
+    for text_file in path_text_files.iterdir():
 
-    # append to list
-    text_corpus.append(text_file.read_text())
-
-
-
-prompt = """
-Summarize the following text in between ```.
-At the end add some useful hashtags to tweet later.
-Make sure that the summrization is at max 100 characters including the tags.
-
-```{text}```
-"""
+        # append to list
+        text_corpus.append(text_file.read_text())
 
 
-# if text is not summarized, try after wait
-done = False
-wait = 60
 
-while not done:
-    try:
-        # summarize text
-        response = get_completion(prompt.format(text='; '.join(text_corpus)))
-        print({ 'length': {len(response)},'message': {response} })
+    prompt = """
+    Summarize the following text in between ```.
+    At the end add some useful hashtags to tweet later.
+    Make sure that the summrization is at max 100 characters including the tags.
 
-        done = True
+    ```{text}```
+    """
 
-    # if the server is overloaded wait
-    except RateLimitError:
-        sleep(wait) # seconds
+    return prompt.format(text='; '.join(text_corpus))
 
 
-    except KeyboardInterrupt:
-        print('Failed to summarize due to overloaded server!')
-        print('canceled.')
-        break
+    # # if text is not summarized, try after wait
+    # done = False
+    # wait = 60
+
+    # while not done:
+    #     try:
+    #         # summarize text
+    #         response = get_completion(prompt.format(text='; '.join(text_corpus)))
+    #         print({ 'length': {len(response)},'message': {response} })
+
+    #         done = True
+
+    #     # if the server is overloaded wait
+    #     except RateLimitError:
+    #         sleep(wait) # seconds
+
+
+    #     except KeyboardInterrupt:
+    #         print('Failed to summarize due to overloaded server!')
+    #         print('canceled.')
+    #         break
