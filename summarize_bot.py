@@ -14,6 +14,8 @@ logger = logging.getLogger('summrize')
 
 # get base folder
 base = Path(__file__).parent
+summrization_folder = base / 'summarization_texts'
+summrization_folder.mkdir(exist_ok=True)
 
 # load env variables
 load_dotenv(base / '.env')
@@ -63,27 +65,33 @@ def summarize(path_text_files):
     ```{text}```
     """
 
-    return prompt.format(text='; '.join(text_corpus))
+    # if text is not summarized, try after wait
+    done = False
+    wait = 60
+
+    while not done:
+        try:
+            prompt = prompt.format(text='; '.join(text_corpus))
+
+            # summarize text
+            response = get_completion(prompt)
+
+            file = summrization_folder / f'{path_text_files.name}_text.txt'
+            file.touch()
+            file.write_text(f"prompt: {prompt}\nsummarization: {response}")
+
+            print({ 'length': {len(response)},'message': {response} })
+
+            done = True
+
+        # if the server is overloaded wait
+        except RateLimitError:
+            sleep(wait) # seconds
 
 
-    # # if text is not summarized, try after wait
-    # done = False
-    # wait = 60
+        except KeyboardInterrupt:
+            print('Failed to summarize due to overloaded server!')
+            print('canceled.')
+            break
 
-    # while not done:
-    #     try:
-    #         # summarize text
-    #         response = get_completion(prompt.format(text='; '.join(text_corpus)))
-    #         print({ 'length': {len(response)},'message': {response} })
-
-    #         done = True
-
-    #     # if the server is overloaded wait
-    #     except RateLimitError:
-    #         sleep(wait) # seconds
-
-
-    #     except KeyboardInterrupt:
-    #         print('Failed to summarize due to overloaded server!')
-    #         print('canceled.')
-    #         break
+    return done, response
