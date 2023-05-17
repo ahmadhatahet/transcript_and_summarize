@@ -82,3 +82,8 @@ def start_recording(*, recording_duration=10, interval_duration=0, total_duratio
     stream.stop_stream()
     stream.close()
     audio.terminate()
+
+
+if __name__ == "__main__":
+
+    start_recording()
