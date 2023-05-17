@@ -1,10 +1,10 @@
 import streamlit as st
-import time
 from log_config import init_logger
 import logging
 from capture_audio import start_recording
 from audio_to_text import start_transcript
 from summarize_bot import summarize
+
 
 # initaite logger
 init_logger()
@@ -34,19 +34,20 @@ def convert_to_text(file_name):
 def main():
     st.title("Audio Recording and Conversion")
 
-    # # Record audio
-    # st.header("Record Audio")
-    # if st.button("Start Recording"):
+    # Record audio
+    st.header("Record Audio")
+    if st.button("Start Recording"):
 
-    #     try:
+        try:
 
-    #         st.session_state['file_name'] = record_audio()
-    #         st.success("Recording finished!")
+            st.session_state['file_name'] = record_audio()
+            st.success("Recording finished!")
 
-    #     except:
-    #         st.warning('Recording was interrupted!')
+        except:
+            st.warning('Recording was interrupted!')
 
-    # st.info(file_name)
+    st.info(file_name)
+
 
     # Convert audio to text
     st.header("Convert to Text")
@@ -54,7 +55,7 @@ def main():
 
         try:
 
-            st.session_state['text_files_path'] = convert_to_text('2023-05-17_20-00')
+            st.session_state['text_files_path'] = convert_to_text(st.session_state['file_name'])
             st.success("Text: {}".format(str(st.session_state['text_files_path'])))
 
         except ValueError:
@@ -64,7 +65,14 @@ def main():
 
     st.header("Summarize Text:")
     if st.button("Summarize"):
-        st.write(summarize(st.session_state['text_files_path']))
+        success, reponse = summarize(st.session_state['text_files_path'])
+
+    if success:
+        st.balloons()
+        st.success(reponse)
+    else:
+        st.error('Server load is too high!')
+
 
 if __name__ == "__main__":
     main()
