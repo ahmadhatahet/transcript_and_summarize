@@ -43,4 +43,4 @@ def start_transcript(file_name):
         # save text
         file.write_text(text, 'utf-8')
 
-        return path_text_files
+    return path_text_files
