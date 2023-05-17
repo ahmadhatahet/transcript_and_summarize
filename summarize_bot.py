@@ -4,6 +4,7 @@ from openai.error import RateLimitError
 from time import sleep
 
 
+
 openai.api_key = "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"
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
@@ -54,3 +55,9 @@ while not done:
     # if the server is overloaded wait
     except RateLimitError:
         sleep(wait) # seconds
+
+
+    except KeyboardInterrupt:
+        print('Failed to summarize due to overloaded server!')
+        print('canceled.')
+        break
