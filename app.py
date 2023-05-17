@@ -10,7 +10,7 @@ logger = logging.getLogger('audio-to-text')
 
 def record_audio():
     print('Recording ... !')
-    start_recording(
+    return start_recording(
         recording_duration=10,
         interval_duration=0,
         total_duration=2
