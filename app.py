@@ -2,6 +2,7 @@ import streamlit as st
 import time
 from log_config import init_logger
 import logging
+from capture_audio import start_recording
 
 # initaite logger
 init_logger()
@@ -9,7 +10,11 @@ logger = logging.getLogger('audio-to-text')
 
 def record_audio():
     print('Recording ... !')
-    time.sleep(20)
+    start_recording(
+        recording_duration=10,
+        interval_duration=0,
+        total_duration=2
+    )
 
 def convert_to_text(audio_file):
     print('Converting to text ... !')
