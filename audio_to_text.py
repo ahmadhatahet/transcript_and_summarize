@@ -4,6 +4,7 @@ import arabic_reshaper
 from log_config import init_logger
 import logging
 
+
 # initaite logger
 init_logger()
 logger = logging.getLogger('audio-to-text')
@@ -11,7 +12,11 @@ logger = logging.getLogger('audio-to-text')
 
 # get base folder
 base = Path(__file__).parent
-path_audio_files = base / 'audio_files' / '2023-04-22_11-37'
+path_audio_files = base / 'audio_files' / '2023-05-17_18-37'
+
+# folder to save text files
+path_text_files = base / 'text_files' / '2023-05-17_18-37'
+path_text_files.mkdir(exist_ok=True, parents=True)
 
 # Initialize the recognizer
 r = sr.Recognizer()
@@ -24,7 +29,15 @@ for audio_file in path_audio_files.iterdir():
         audio = r.record(source)
 
     # Convert audio to text
-    text = r.recognize_google(audio, language="ar")
-    text = arabic_reshaper.reshape(text)
+    text = r.recognize_google(audio, language="en")
+
+    # text = arabic_reshaper.reshape(text)
     # Print the recognized text
-    print(text[::-1])
+    # print(text[::-1])
+
+    # create text file
+    file = path_text_files / f'{audio_file.name}.txt'
+    file.touch()
+
+    # save text
+    file.write_text(text, 'utf-8')
