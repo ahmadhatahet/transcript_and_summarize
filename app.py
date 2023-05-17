@@ -46,8 +46,6 @@ def main():
         except:
             st.warning('Recording was interrupted!')
 
-    st.info(file_name)
-
 
     # Convert audio to text
     st.header("Convert to Text")
@@ -67,11 +65,11 @@ def main():
     if st.button("Summarize"):
         success, reponse = summarize(st.session_state['text_files_path'])
 
-    if success:
-        st.balloons()
-        st.success(reponse)
-    else:
-        st.error('Server load is too high!')
+        if success:
+            st.balloons()
+            st.success(reponse)
+        else:
+            st.error('Server load is too high!')
 
 
 if __name__ == "__main__":
