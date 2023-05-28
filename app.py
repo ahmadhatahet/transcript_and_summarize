@@ -15,8 +15,9 @@ for k in keys:
     if k not in st.session_state:
         st.session_state[k] = None
 
-def record_audio():
-    print('Recording ... !')
+def record_audio(recording_duration=10,interval_duration=0,total_duration=1):
+    st.spinner(text="Recording...")
+    logger.info('Recording ... !')
     return start_recording(
         recording_duration=10,
         interval_duration=0,
@@ -34,13 +35,25 @@ def convert_to_text(file_name):
 def main():
     st.title("Audio Recording and Conversion")
 
+
+    # Input boxes for record and total duration
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        lang = st.selectbox("Language", ['English', 'German', 'Arabic'])
+
+    with col2:
+        recording_duration = st.number_input("Per Record Duration (seconds)", value=10, min_value=10)
+
+    with col3:
+        total_duration = st.number_input("Total Duration (minutes)", value=1, min_value=1)
+
     # Record audio
     st.header("Record Audio")
     if st.button("Start Recording"):
 
         try:
 
-            st.session_state['file_name'] = record_audio()
+            st.session_state['file_name'] = record_audio(recording_duration=recording_duration,total_duration=total_duration)
             st.success("Recording finished!")
 
         except:
