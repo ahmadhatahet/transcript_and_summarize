@@ -1,4 +1,5 @@
 import speech_recognition as sr
+from speech_recognition import exceptions as sr_exception
 from pathlib import Path
 import arabic_reshaper
 from log_config import init_logger
@@ -29,8 +30,11 @@ def start_transcript(file_name):
         with sr.AudioFile(audio_file.__str__() ) as source:
             audio = r.record(source)
 
-        # Convert audio to text
-        text = r.recognize_google(audio, language="en")
+        try:
+            # Convert audio to text
+            text = r.recognize_google(audio, language="en")
+        except sr_exception.UnknownValueError:
+            text = '' # if empty or currupted audio file
 
         # text = arabic_reshaper.reshape(text)
         # Print the recognized text
