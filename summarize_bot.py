@@ -46,15 +46,14 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
     return response.choices[0].message["content"]
 
 
-def summarize(path_text_files):
+def summarize(path_text_files, language):
 
     # read all texts
     text_corpus = []
     for text_file in path_text_files.iterdir():
 
         # append to list
-        text_corpus.append(text_file.read_text())
-
+        text_corpus.append(text_file.read_text(encoding="utf8"))
 
 
     prompt = """
@@ -64,6 +63,14 @@ def summarize(path_text_files):
 
     ```{text}```
     """
+
+    if language == 'Arabic':
+        prompt = """لخص النص التالي بين ``.
+         في النهاية ، أضف بعض التاجز المفيدة للتغريد لاحقًا.
+         تأكد من أن الملخص بحد أقصى 100 حرف بما في ذلك العلامات.
+
+        ```{text}```
+        """
 
     # if text is not summarized, try after wait
     done = False
@@ -78,7 +85,7 @@ def summarize(path_text_files):
 
             file = summrization_folder / f'{path_text_files.name}_text.txt'
             file.touch()
-            file.write_text(f"prompt: {prompt}\nsummarization: {response}")
+            file.write_text(f"prompt: {prompt}\nsummarization: {response}", encoding="utf8")
 
             print({ 'length': {len(response)},'message': {response} })
 
