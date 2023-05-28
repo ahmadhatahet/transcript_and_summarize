@@ -15,21 +15,20 @@ for k in keys:
     if k not in st.session_state:
         st.session_state[k] = None
 
-def record_audio(recording_duration=10,interval_duration=0,total_duration=1):
-    st.spinner(text="Recording...")
+def record_audio(recording_duration=10,total_duration=1):
     logger.info('Recording ... !')
     return start_recording(
         recording_duration=10,
-        interval_duration=0,
         total_duration=1
     )
 
-def convert_to_text(file_name):
-    print('Converting to text ... !')
+def convert_to_text(file_name, language):
+    logger.info('Converting to text ... !')
+    logger.debug(f'Langauge: {language} ... !')
 
     if file_name is None: raise ValueError('No file name was passed!')
 
-    return start_transcript(file_name)
+    return start_transcript(file_name, language)
 
 # Streamlit app code
 def main():
@@ -50,39 +49,40 @@ def main():
     # Record audio
     st.header("Record Audio")
     if st.button("Start Recording"):
+        with st.spinner(text="Recording..."):
+            try:
 
-        try:
+                st.session_state['file_name'] = record_audio(recording_duration=recording_duration,total_duration=total_duration)
+                st.success("Recording finished!")
 
-            st.session_state['file_name'] = record_audio(recording_duration=recording_duration,total_duration=total_duration)
-            st.success("Recording finished!")
-
-        except:
-            st.warning('Recording was interrupted!')
+            except:
+                st.warning('Recording was interrupted!')
 
 
     # Convert audio to text
     st.header("Convert to Text")
-    if st.button("Convert"):
+    if st.button("Transcript"):
+        with st.spinner(text="Transcripting..."):
+            try:
 
-        try:
+                st.session_state['text_files_path'] = convert_to_text(st.session_state['file_name'], lang)
+                st.success("Text: {}".format(str(st.session_state['text_files_path'])))
 
-            st.session_state['text_files_path'] = convert_to_text(st.session_state['file_name'])
-            st.success("Text: {}".format(str(st.session_state['text_files_path'])))
+            except ValueError:
 
-        except ValueError:
-
-            st.error('No file name was passed!')
+                st.error('No file name was passed!')
 
 
     st.header("Summarize Text:")
     if st.button("Summarize"):
-        success, reponse = summarize(st.session_state['text_files_path'])
+        with st.spinner(text="Summarizing..."):
+            success, reponse = summarize(st.session_state['text_files_path'], lang)
 
-        if success:
-            st.balloons()
-            st.success(reponse)
-        else:
-            st.error('Server load is too high!')
+            if success:
+                st.balloons()
+                st.success(reponse)
+            else:
+                st.error('Server load is too high!')
 
 
 if __name__ == "__main__":
