@@ -10,8 +10,13 @@ import logging
 init_logger()
 logger = logging.getLogger('audio-to-text')
 
+languages = {
+    'English': 'en',
+    'German': 'de',
+    'Arabic': 'ar',
+}
 
-def start_transcript(file_name):
+def start_transcript(file_name, language):
     # get base folder
     base = Path(__file__).parent
     path_audio_files = base / 'audio_files' / file_name
@@ -32,13 +37,12 @@ def start_transcript(file_name):
 
         try:
             # Convert audio to text
-            text = r.recognize_google(audio, language="en")
+            text = r.recognize_google(audio, language=languages[language])
         except sr_exception.UnknownValueError:
             text = '' # if empty or currupted audio file
 
-        # text = arabic_reshaper.reshape(text)
-        # Print the recognized text
-        # print(text[::-1])
+        if language == 'Arabic':
+            text = arabic_reshaper.reshape(text)
 
         # create text file
         file = path_text_files / f'{audio_file.name}.txt'
