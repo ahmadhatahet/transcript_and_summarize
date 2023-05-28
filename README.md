@@ -1,12 +1,19 @@
 # Transcript and Summarize:
+Recording long conversation, trancipting, then summarize, has became much simpler and affordable with new LLMs.
 
-1. Record audio from microphone with set of constrains
-2. Transcript the audio into text files
-3. collect all text then send it to OpenAI for summarizaiton
-4. Return and save the response
+This is a small project to utilize OpenAI and  Speech recognizer ([supports various models](https://pypi.org/project/SpeechRecognition/)) APIs.
 
+Using the user primary microphone and a streamlit web UI, the user could choose one of three languages [English, German, Arabic], total duration of the recording time in minutes, and how many seconds to save as a file as the time goes.
 
 ### Todos:
-1. Multi language support (EN, DE, AR).
-2. Add options to the UI for faster modifications.
-3. Try to work in parallel( while speaking each created file get transcripted then sent to summarization)<br />This point needs longer duration. Here the limitaion of Google Model to transcript text must be taken into account.
+1. ✔ Multi language support (EN, DE, AR).
+2. ✔ Add options to the UI for faster modifications.
+
+
+### Notes:
+Arabic language is one of the Semitic language , thus, it is not well recognized by the models used yet.
+Transcripting works fairly well, but summarizing is less than average. Maybe a better prompt could help increase the quality of the summarized text.
+
+
+### Screenshot:
+![Screenshot of the streamlit UI](https://github.com/ahmadhatahet/transcript_and_summarize/blob/master/home_screen.png?raw=true)
